@@ -129,12 +129,18 @@ Start a new chat. stint is active.
 
 ### Other agents
 
-```bash
-git clone https://github.com/mrmajdi/stint.git
-cd stint
-./install.sh                          # every agent found on this computer
-./install.sh --project ~/code/my-app  # one project: AGENTS.md + Cursor rule
-```
+1. Download the code:
+
+   ```bash
+   git clone https://github.com/mrmajdi/stint.git
+   ```
+
+2. Read `install.sh` first if you like. It is short and only writes the files in the table below. Then run it from the `stint` folder:
+
+   ```bash
+   ./install.sh                          # every agent found on this computer
+   ./install.sh --project ~/code/my-app  # one project: AGENTS.md + Cursor rule
+   ```
 
 | Option | What it installs |
 |---|---|
