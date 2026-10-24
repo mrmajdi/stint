@@ -1,0 +1,16 @@
+{
+  "name": "stint",
+  "description": "Cut Claude Code usage without cutting quality: short chats, handoff notes, and a usage audit.",
+  "owner": {
+    "name": "mrmajdi",
+    "url": "https://github.com/mrmajdi"
+  },
+  "plugins": [
+    {
+      "name": "stint",
+      "source": "./",
+      "description": "Short chats, automatic handoff notes, and a usage audit for Claude Code.",
+      "category": "productivity"
+    }
+  ]
+}

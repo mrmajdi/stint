@@ -1,0 +1,9 @@
+# Local design notes, never published
+docs/
+
+# Handoff notes from working on stint itself
+.stint/
+
+__pycache__/
+*.pyc
+.DS_Store

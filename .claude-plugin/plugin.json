@@ -1,0 +1,13 @@
+{
+  "name": "stint",
+  "version": "0.1.0",
+  "description": "Cut Claude Code usage without cutting quality: short chats, automatic handoff notes between them, and an audit that shows where your tokens go.",
+  "author": {
+    "name": "mrmajdi",
+    "url": "https://github.com/mrmajdi"
+  },
+  "homepage": "https://github.com/mrmajdi/stint",
+  "repository": "https://github.com/mrmajdi/stint",
+  "license": "MIT",
+  "keywords": ["tokens", "usage-limits", "context", "handoff", "session", "productivity"]
+}
