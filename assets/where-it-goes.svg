@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="350" viewBox="0 0 900 350" role="img" aria-label="Where the usage went: re-reading chat history 70%, re-caching history 19%, writing 7%, thinking 4%.">
+<title>Where the usage went: re-reading chat history 70%, re-caching history 19%, writing 7%, thinking 4%.</title>
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0d1117"/><stop offset="1" stop-color="#161b22"/></linearGradient>
+
+</defs>
+<rect x="0.5" y="0.5" width="899" height="349" rx="16" fill="url(#bg)" stroke="#30363d"/>
+<text x="40" y="52" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="22" font-weight="700" fill="#e6edf3" text-anchor="start">Where 30 days of Claude Code usage went</text>
+<text x="40" y="78" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="14" font-weight="400" fill="#8b949e" text-anchor="start">4,881 model calls from one developer · each token type weighted by its API price ratio</text>
+<text x="40" y="130" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="16" font-weight="400" fill="#e6edf3" text-anchor="start">Re-reading chat history</text>
+<rect x="270" y="118" width="520" height="16" rx="8.0" fill="#21262d"/><rect x="270" y="118" width="364.0" height="16" rx="8.0" fill="#d97757"/>
+<text x="860" y="131" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="17" font-weight="700" fill="#d97757" text-anchor="end">70%</text>
+<text x="40" y="176" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="16" font-weight="400" fill="#e6edf3" text-anchor="start">Re-caching chat history</text>
+<rect x="270" y="164" width="520" height="16" rx="8.0" fill="#21262d"/><rect x="270" y="164" width="98.8" height="16" rx="8.0" fill="#e8a98c"/>
+<text x="860" y="177" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="17" font-weight="700" fill="#e8a98c" text-anchor="end">19%</text>
+<text x="40" y="222" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="16" font-weight="400" fill="#e6edf3" text-anchor="start">Writing answers</text>
+<rect x="270" y="210" width="520" height="16" rx="8.0" fill="#21262d"/><rect x="270" y="210" width="36.4" height="16" rx="8.0" fill="#58a6ff"/>
+<text x="860" y="223" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="17" font-weight="700" fill="#58a6ff" text-anchor="end">7%</text>
+<text x="40" y="268" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="16" font-weight="400" fill="#e6edf3" text-anchor="start">Thinking</text>
+<rect x="270" y="256" width="520" height="16" rx="8.0" fill="#21262d"/><rect x="270" y="256" width="20.8" height="16" rx="8.0" fill="#bc8cff"/>
+<text x="860" y="269" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="17" font-weight="700" fill="#bc8cff" text-anchor="end">4%</text>
+<text x="40" y="318" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="16" fill="#8b949e">Chat history: <tspan fill="#d97757" font-weight="700">89%</tspan> of usage.  Answers and thinking: <tspan fill="#58a6ff" font-weight="700">11%</tspan>.  stint works on the 89%.</text>
+</svg>
