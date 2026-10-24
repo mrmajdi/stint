@@ -131,7 +131,7 @@ Start a new chat. stint is active.
 > **Turn on usage limit warnings (optional).** Claude Code only shares your usage-limit numbers with the status line. Add this to `~/.claude/settings.json`:
 >
 > ```json
-> "statusLine": { "type": "command", "command": "bash ~/.claude/stint/statusline.sh" }
+> "statusLine": { "type": "command", "command": "bash ~/.claude/stint/limit-watch.sh status" }
 > ```
 >
 > The status line then shows `stint · context 34% · 5h 61% · week 42%`. This needs a Pro or Max plan. The script is copied to `~/.claude/stint/` each time a chat starts, so the path keeps working after plugin updates.
@@ -309,7 +309,7 @@ These are Claude Code settings. stint works without them, but they help.
 - 📦 There are no dependencies. stint uses only `bash` and `python3`.
 - 🙈 The audit uses only the usage numbers in `~/.claude/projects/` (token counts, times, model names and `/goal` commands). It prints totals only. It never prints or stores your prompts or code.
 - 🪝 The start-of-chat hook reads your handoff note and, when you resume a chat, the size of its history. The limit hook reads the levels the status line saved. Neither sends anything anywhere.
-- 📁 Files stint writes: `.stint/handoff.md` in your projects, `~/.claude/stint/` (status line copy and limit levels), and the instruction files you choose during install.
+- 📁 Files stint writes: `.stint/handoff.md` in your projects, `~/.claude/stint/` (a copy of the limit script, and the limit levels), and the instruction files you choose during install.
 
 ## Troubleshooting
 
@@ -359,7 +359,7 @@ Not by itself. That is why stint saves the note during the work, and why the lim
 Yes. Send the same input to both scripts, for example:
 
 ```json
-"command": "bash -c 'in=$(cat); printf %s \"$in\" | bash ~/.claude/stint/statusline.sh >/dev/null; printf %s \"$in\" | your-status-line-command'"
+"command": "bash -c 'in=$(cat); printf %s \"$in\" | bash ~/.claude/stint/limit-watch.sh status >/dev/null; printf %s \"$in\" | your-status-line-command'"
 ```
 
 </details>
@@ -392,7 +392,7 @@ bash tests/run.sh   # hook, installer and audit tests
 
 ```text
 .claude-plugin/        plugin and marketplace manifests
-hooks/                 session-start, limit-watch and status line scripts
+hooks/                 the session-start hook, and limit-watch (limit hook and status line)
 skills/stint/          the skill, and scripts/audit.py
 rules/stint.md         the always-on rules used by install.sh
 install.sh             installer for other agents

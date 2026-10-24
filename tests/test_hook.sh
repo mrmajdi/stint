@@ -59,7 +59,7 @@ check "no graph, no graphify line" "$out" "graphify" absent
 out=$(cd "$tmp/active" && printf '{"source":"startup"}' | env -i HOME="$tmp/home" PATH=/usr/bin:/bin bash "$hook")
 check "without a project dir, the current folder is used" "$out" "handoff note from a previous chat"
 run "$tmp/empty" '{"source":"startup"}' CLAUDE_PLUGIN_ROOT="$here" >/dev/null
-[ -f "$tmp/home/.claude/stint/statusline.sh" ] && check "status line copied to a stable path" "yes" "yes" || check "status line copied to a stable path" "no" "yes"
+[ -f "$tmp/home/.claude/stint/limit-watch.sh" ] && check "status line copied to a stable path" "yes" "yes" || check "status line copied to a stable path" "no" "yes"
 
 echo full > "$tmp/home/.claude/.ponytail-active"
 out=$(run "$tmp/empty" '{"source":"startup"}')
@@ -71,29 +71,29 @@ check "ponytail off is ignored" "$out" "ponytail is active" absent
 out=$(run "$tmp/empty" '')
 check "empty stdin still works" "$out" "keep .stint/handoff.md current"
 
-limits() { env -i HOME="$tmp/home" PATH=/usr/bin:/bin bash "$here/hooks/$1"; }
-out=$(printf '{"context_window":{"used_percentage":41.7},"rate_limits":{"five_hour":{"used_percentage":83.2,"resets_at":1761300000},"seven_day":{"used_percentage":47.9}}}' | limits statusline.sh)
+limits() { env -i HOME="$tmp/home" PATH=/usr/bin:/bin bash "$here/hooks/limit-watch.sh" "$@"; }
+out=$(printf '{"context_window":{"used_percentage":41.7},"rate_limits":{"five_hour":{"used_percentage":83.2,"resets_at":1761300000},"seven_day":{"used_percentage":47.9}}}' | limits status)
 check "status line shows context and limits" "$out" "context 41% · 5h 83% · week 47%"
-out=$(printf '{"session_id":"s1"}' | limits limit-watch.sh)
+out=$(printf '{"session_id":"s1"}' | limits)
 check "crossing 80% warns the agent" "$out" "83% of the 5-hour window, resets at"
-out=$(printf '{"session_id":"s1"}' | limits limit-watch.sh)
+out=$(printf '{"session_id":"s1"}' | limits)
 check "same level warns only once" "$out" "stint:" absent
-printf '{"rate_limits":{"five_hour":{"used_percentage":96}}}' | limits statusline.sh >/dev/null
-out=$(printf '{"session_id":"s1"}' | limits limit-watch.sh)
+printf '{"rate_limits":{"five_hour":{"used_percentage":96}}}' | limits status >/dev/null
+out=$(printf '{"session_id":"s1"}' | limits)
 check "crossing 95% warns again" "$out" "96% of the 5-hour window"
-out=$(printf '{"session_id":"s2"}' | limits limit-watch.sh)
+out=$(printf '{"session_id":"s2"}' | limits)
 check "a new chat gets its own warning" "$out" "96% of the 5-hour window"
 sed -i.bak 's/^updated=.*/updated=1/' "$tmp/home/.claude/stint/limits"
-out=$(printf '{"session_id":"s3"}' | limits limit-watch.sh)
+out=$(printf '{"session_id":"s3"}' | limits)
 check "stale numbers are ignored" "$out" "stint:" absent
-out=$(printf '{"context_window":{"used_percentage":5}}' | limits statusline.sh)
+out=$(printf '{"context_window":{"used_percentage":5}}' | limits status)
 check "status line works without limit data" "$out" "context 5%"
-printf '{"rate_limits":{"five_hour":{"used_percentage":30},"seven_day":{"used_percentage":91,"resets_at":1761800000}}}' | limits statusline.sh >/dev/null
-out=$(printf '{"session_id":"w1"}' | limits limit-watch.sh)
+printf '{"rate_limits":{"five_hour":{"used_percentage":30},"seven_day":{"used_percentage":91,"resets_at":1761800000}}}' | limits status >/dev/null
+out=$(printf '{"session_id":"w1"}' | limits)
 check "weekly limit warns on its own" "$out" "91% of the weekly limit, resets"
 check "weekly warning skips a calm 5-hour window" "$out" "5-hour" absent
-printf '{"rate_limits":{"five_hour":{"used_percentage":85},"seven_day":{"used_percentage":92}}}' | limits statusline.sh >/dev/null
-out=$(printf '{"session_id":"w1"}' | limits limit-watch.sh)
+printf '{"rate_limits":{"five_hour":{"used_percentage":85},"seven_day":{"used_percentage":92}}}' | limits status >/dev/null
+out=$(printf '{"session_id":"w1"}' | limits)
 check "5-hour warning still comes after a weekly one" "$out" "85% of the 5-hour window"
 check "weekly level already warned is not repeated" "$out" "weekly" absent
 

@@ -19,8 +19,8 @@ kind=$(field source)
 transcript=$(field transcript_path)
 dir=$CLAUDE_PROJECT_DIR
 [ -n "$dir" ] || dir=$(field cwd)
-[ -n "$dir" ] || dir=.
-note="$dir/.stint/handoff.md"
+[ -n "$dir" ] && cd "$dir" 2>/dev/null
+note=.stint/handoff.md
 config="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
 
 echo "stint: for multi-step work, keep .stint/handoff.md current (goal, done, decisions, dead ends, next steps, key files; overwrite, at most 60 lines). Update it after each finished subtask or decision, before long-running steps, after a compaction, and as soon as the user is stopping or near a limit: a usage limit can end the chat without warning. Mark it 'Status: done' when the task is finished. Suggest a fresh chat when the topic changes. The stint skill has the format."
@@ -46,13 +46,13 @@ if [ "$kind" = resume ] && [ -f "$transcript" ]; then
   fi
 fi
 
-if [ -f "$dir/graphify-out/graph.json" ]; then
+if [ -f graphify-out/graph.json ]; then
   echo "stint: this project has a graphify knowledge graph in graphify-out/. If the user works with graphify, its query command can answer code questions with fewer file reads."
 fi
 
 # Keep a copy of the status line script at a stable path: the plugin folder changes on every update.
-if [ -f "$CLAUDE_PLUGIN_ROOT/hooks/statusline.sh" ]; then
-  mkdir -p "$config/stint" 2>/dev/null && cp "$CLAUDE_PLUGIN_ROOT/hooks/statusline.sh" "$config/stint/statusline.sh" 2>/dev/null
+if [ -f "$CLAUDE_PLUGIN_ROOT/hooks/limit-watch.sh" ]; then
+  mkdir -p "$config/stint" 2>/dev/null && cp "$CLAUDE_PLUGIN_ROOT/hooks/limit-watch.sh" "$config/stint/limit-watch.sh" 2>/dev/null
 fi
 
 flag="$config/.ponytail-active"
