@@ -7,5 +7,5 @@ Long chats are re-read on every message, and resuming one after a break re-sends
 - **Finished:** set `Status: done`.
 - **First save in a git repo:** keep the note out of commits with `f=$(git rev-parse --git-path info/exclude) && { grep -qxF '.stint/' "$f" || echo '.stint/' >> "$f"; }`.
 - Suggest a fresh chat when the topic changes or when the user comes back to a long chat after a break.
-- If `graphify-out/graph.json` exists, run `graphify update .` and query the graph before reading files.
+- If the project uses graphify (`graphify-out/graph.json` exists), prefer `graphify query` over reading many files, and run `graphify update .` after big code changes.
 - Never put secrets in the note.

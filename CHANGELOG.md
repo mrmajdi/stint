@@ -2,6 +2,15 @@
 
 All notable changes to stint are listed here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Changed
+
+- Hooks are called by their path and written in plain shell, for the Claude plugin directory checks. The start-of-chat hook no longer reads `$PWD` and no longer runs `command -v graphify`.
+- The graphify hint only says that a graph exists. The agent is not told to run graphify.
+- README: graphify setup steps, troubleshooting, support and security contact, and install steps for the VS Code extension.
+- Plugin listing icon.
+
 ## [0.1.0] - 2026-10-24
 
 ### Added

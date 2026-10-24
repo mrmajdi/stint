@@ -21,7 +21,7 @@ run() {  # run PROJECT_DIR STDIN_JSON [extra env...]
   printf '%s' "$json" | env -i HOME="$tmp/home" PATH=/usr/bin:/bin CLAUDE_PROJECT_DIR="$dir" "$@" bash "$hook"
 }
 
-mkdir -p "$tmp/home/.claude" "$tmp/empty" "$tmp/active/.stint" "$tmp/finished/.stint" "$tmp/graph/graphify-out" "$tmp/bin"
+mkdir -p "$tmp/home/.claude" "$tmp/empty" "$tmp/active/.stint" "$tmp/finished/.stint" "$tmp/graph/graphify-out"
 
 out=$(run "$tmp/empty" '{"source":"startup"}'); code=$?
 check "always exits 0" "$code" "0"
@@ -52,10 +52,14 @@ check "resuming a small chat gets no warning" "$out" "tokens of history" absent
 
 echo '{}' > "$tmp/graph/graphify-out/graph.json"
 out=$(run "$tmp/graph" '{"source":"startup"}')
-check "graph without graphify installed is ignored" "$out" "graphify knowledge graph" absent
-printf '#!/bin/sh\n' > "$tmp/bin/graphify"; chmod +x "$tmp/bin/graphify"
-out=$(printf '{"source":"startup"}' | env -i HOME="$tmp/home" PATH="$tmp/bin:/usr/bin:/bin" CLAUDE_PROJECT_DIR="$tmp/graph" bash "$hook")
-check "graph with graphify installed is announced" "$out" "graphify knowledge graph"
+check "a graphify graph is mentioned" "$out" "graphify knowledge graph"
+out=$(run "$tmp/empty" '{"source":"startup"}')
+check "no graph, no graphify line" "$out" "graphify" absent
+
+out=$(cd "$tmp/active" && printf '{"source":"startup"}' | env -i HOME="$tmp/home" PATH=/usr/bin:/bin bash "$hook")
+check "without a project dir, the current folder is used" "$out" "handoff note from a previous chat"
+run "$tmp/empty" '{"source":"startup"}' CLAUDE_PLUGIN_ROOT="$here" >/dev/null
+[ -f "$tmp/home/.claude/stint/statusline.sh" ] && check "status line copied to a stable path" "yes" "yes" || check "status line copied to a stable path" "no" "yes"
 
 echo full > "$tmp/home/.claude/.ponytail-active"
 out=$(run "$tmp/empty" '{"source":"startup"}')

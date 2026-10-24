@@ -8,16 +8,20 @@ IFS= read -r -t 2 -d '' input || true
 field() { printf '%s' "$input" | sed -n "s/.*\"$1\"[[:space:]]*:[[:space:]]*\"\([^\"]*\)\".*/\1/p" | head -n 1; }
 mtime() { stat -c %Y "$1" 2>/dev/null || stat -f %m "$1" 2>/dev/null || echo 0; }
 age() {
-  local hours=$(( ($(date +%s) - $(mtime "$1")) / 3600 ))
+  local now changed hours
+  now=$(date +%s)
+  changed=$(mtime "$1")
+  hours=$(( (now - changed) / 3600 ))
   if [ "$hours" -lt 1 ]; then echo "under an hour ago"; elif [ "$hours" -lt 48 ]; then echo "${hours}h ago"; else echo "$(( hours / 24 )) days ago"; fi
 }
 
 kind=$(field source)
 transcript=$(field transcript_path)
-dir=${CLAUDE_PROJECT_DIR:-$(field cwd)}
-dir=${dir:-$PWD}
+dir=$CLAUDE_PROJECT_DIR
+[ -n "$dir" ] || dir=$(field cwd)
+[ -n "$dir" ] || dir=.
 note="$dir/.stint/handoff.md"
-config=${CLAUDE_CONFIG_DIR:-$HOME/.claude}
+config="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
 
 echo "stint: for multi-step work, keep .stint/handoff.md current (goal, done, decisions, dead ends, next steps, key files; overwrite, at most 60 lines). Update it after each finished subtask or decision, before long-running steps, after a compaction, and as soon as the user is stopping or near a limit: a usage limit can end the chat without warning. Mark it 'Status: done' when the task is finished. Suggest a fresh chat when the topic changes. The stint skill has the format."
 
@@ -42,13 +46,13 @@ if [ "$kind" = resume ] && [ -f "$transcript" ]; then
   fi
 fi
 
-if [ -f "$dir/graphify-out/graph.json" ] && command -v graphify >/dev/null 2>&1; then
-  echo "stint: this project has a graphify knowledge graph. Run 'graphify update .' once, then use 'graphify query' before grepping or reading files."
+if [ -f "$dir/graphify-out/graph.json" ]; then
+  echo "stint: this project has a graphify knowledge graph in graphify-out/. If the user works with graphify, its query command can answer code questions with fewer file reads."
 fi
 
 # Keep a copy of the status line script at a stable path: the plugin folder changes on every update.
-if [ -f "$(dirname "$0")/statusline.sh" ]; then
-  mkdir -p "$config/stint" 2>/dev/null && cp "$(dirname "$0")/statusline.sh" "$config/stint/statusline.sh" 2>/dev/null
+if [ -f "$CLAUDE_PLUGIN_ROOT/hooks/statusline.sh" ]; then
+  mkdir -p "$config/stint" 2>/dev/null && cp "$CLAUDE_PLUGIN_ROOT/hooks/statusline.sh" "$config/stint/statusline.sh" 2>/dev/null
 fi
 
 flag="$config/.ponytail-active"

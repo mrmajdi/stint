@@ -60,6 +60,15 @@ At **80%, 90% and 95%** of your 5-hour or weekly limit, the agent saves the note
 
 </td>
 </tr>
+<tr>
+<td colspan="2" valign="top">
+
+### 🧠 Works with graphify
+
+If your project has a [graphify](https://github.com/Graphify-Labs/graphify) knowledge graph, stint tells every new chat about it. The agent can answer code questions from the graph instead of reading many files again, so a fresh chat stays small. [How to set it up](#graphify).
+
+</td>
+</tr>
 </table>
 
 ## The problem
@@ -246,12 +255,29 @@ Each level warns only once per chat. Numbers older than 20 minutes are ignored. 
 
 ## Works with graphify and ponytail
 
-stint works alone. If you also use these tools, it uses them:
+stint works alone. If you also use these tools, stint uses them.
 
-| Tool | What stint does with it |
-|---|---|
-| [graphify](https://github.com/Graphify-Labs/graphify) | When the project has a graph, a new chat runs `graphify update .` and asks the graph first, instead of reading many files again. |
-| [ponytail](https://github.com/DietrichGebert/ponytail) | When ponytail is active, the note lists the `shortcut:` comments the agent added, so the next chat knows the deferred work. |
+### graphify
+
+[graphify](https://github.com/Graphify-Labs/graphify) turns your code into a knowledge graph. A fresh chat can ask the graph about your code instead of reading many files again. That keeps the new chat small, which is the whole idea of stint.
+
+How to use it with stint:
+
+1. Install graphify (see its README).
+2. In your project, build the graph once. This reads only your code and needs no AI key:
+
+   ```bash
+   graphify update .
+   ```
+
+3. Start a new chat. stint sees `graphify-out/graph.json` and tells the agent that the graph is there.
+4. The agent asks the graph, for example `graphify query "what calls parse"`, and writes the important file and function names into the handoff note.
+
+Run `graphify update .` again after big code changes, so the graph stays current.
+
+### ponytail
+
+[ponytail](https://github.com/DietrichGebert/ponytail) makes the agent write less code. When ponytail is active, the handoff note lists the `shortcut:` comments the agent added, so the next chat knows the deferred work.
 
 ## Supported agents
 
@@ -281,8 +307,20 @@ These are Claude Code settings. stint works without them, but they help.
 
 - 🔒 stint runs only on your computer. It sends nothing over the network. There is no telemetry.
 - 📦 There are no dependencies. stint uses only `bash` and `python3`.
-- 🙈 The audit reads `~/.claude/projects/` and prints totals only. It never prints your prompts or code.
+- 🙈 The audit uses only the usage numbers in `~/.claude/projects/` (token counts, times, model names and `/goal` commands). It prints totals only. It never prints or stores your prompts or code.
+- 🪝 The start-of-chat hook reads your handoff note and, when you resume a chat, the size of its history. The limit hook reads the levels the status line saved. Neither sends anything anywhere.
 - 📁 Files stint writes: `.stint/handoff.md` in your projects, `~/.claude/stint/` (status line copy and limit levels), and the instruction files you choose during install.
+
+## Troubleshooting
+
+| Problem | What to check |
+|---|---|
+| A new chat does not mention the note | The note must be in `.stint/handoff.md` in the folder where you start Claude Code. A note with `Status: done` is not resumed. Run `/hooks` in Claude Code to see that the stint hooks are loaded. |
+| No usage limit warnings | You need a Pro or Max plan, the stint status line in `~/.claude/settings.json`, and the Claude Code terminal app. The file `~/.claude/stint/limits` should change while you work. |
+| `/stint audit` shows no activity | Try a longer period: `--days 90`. If your Claude folder is not `~/.claude`, add `--root /path/to/.claude/projects`. |
+| `/plugin isn't available in this environment` | You are in the VS Code extension. Use the terminal steps in [Install](#claude-code). |
+
+Still stuck? [Open an issue](https://github.com/mrmajdi/stint/issues).
 
 ## FAQ
 
@@ -375,6 +413,11 @@ CI runs the tests on Linux and macOS, and runs ShellCheck on every script.
 - [ ] A real before-and-after study with more users
 
 Ideas and pull requests are welcome. Please keep the tool small and free of dependencies.
+
+## Support
+
+- **Questions and bugs:** [open an issue](https://github.com/mrmajdi/stint/issues).
+- **Security problems:** report them privately with **Report a vulnerability** on the [Security tab](https://github.com/mrmajdi/stint/security). Please do not open a public issue for them.
 
 ## Credits
 

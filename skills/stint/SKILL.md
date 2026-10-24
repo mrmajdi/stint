@@ -75,7 +75,7 @@ Never write secrets, tokens or passwords into the note.
 
 ## With graphify and ponytail
 
-- **graphify** (`graphify-out/graph.json` exists): on resume, run `graphify update .` and re-orient with `graphify query` or `graphify path` instead of reading files. Name nodes and files in the note; don't paste graph output into it.
+- **graphify** (`graphify-out/graph.json` exists and the user works with graphify): prefer `graphify query` or `graphify path` over reading many files, and run `graphify update .` after big code changes. Name nodes and files in the note; don't paste graph output into it.
 - **ponytail** active: list any `shortcut:` comments you added under Next steps, so the next chat knows the deferred work.
 
 Neither is required. Without them, stint works the same.
