@@ -9,18 +9,19 @@ IFS= read -r -t 2 -d '' input || true
 state="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/stint"
 
 if [ "$1" = status ]; then
-  json=$(printf '%s' "$input" | tr -d '\n')
-  num() { printf '%s' "$json" | sed -n "s/.*\"$1\"[^}]*\"$2\"[[:space:]]*:[[:space:]]*\([0-9][0-9.]*\).*/\1/p" | head -n 1; }
-  five=$(num five_hour used_percentage)
-  week=$(num seven_day used_percentage)
-  five_reset=$(num five_hour resets_at)
-  week_reset=$(num seven_day resets_at)
-  context=$(num context_window used_percentage)
+  # One literal pattern per value: the input becomes one line with no spaces, then "key":number is picked.
+  json=$(printf '%s' "$input" | tr -d '[:space:]')
+  five=$(printf '%s' "$json" | sed -n 's/.*"five_hour"[^}]*"used_percentage":\([0-9][0-9.]*\).*/\1/p')
+  week=$(printf '%s' "$json" | sed -n 's/.*"seven_day"[^}]*"used_percentage":\([0-9][0-9.]*\).*/\1/p')
+  five_reset=$(printf '%s' "$json" | sed -n 's/.*"five_hour"[^}]*"resets_at":\([0-9][0-9.]*\).*/\1/p')
+  week_reset=$(printf '%s' "$json" | sed -n 's/.*"seven_day"[^}]*"resets_at":\([0-9][0-9.]*\).*/\1/p')
+  context=$(printf '%s' "$json" | sed -n 's/.*"context_window"[^}]*"used_percentage":\([0-9][0-9.]*\).*/\1/p')
   # Limits come only on Pro and Max plans, after the first reply.
   if [ -n "$five$week" ]; then
     mkdir -p "$state" 2>/dev/null
+    now=$(date +%s)
     printf 'five_hour=%s\nseven_day=%s\nfive_hour_resets=%s\nseven_day_resets=%s\nupdated=%s\n' \
-      "${five%.*}" "${week%.*}" "${five_reset%.*}" "${week_reset%.*}" "$(date +%s)" > "$state/limits.tmp" 2>/dev/null \
+      "${five%.*}" "${week%.*}" "${five_reset%.*}" "${week_reset%.*}" "$now" > "$state/limits.tmp" 2>/dev/null \
       && mv "$state/limits.tmp" "$state/limits" 2>/dev/null
   fi
   printf 'stint'
