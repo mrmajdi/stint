@@ -108,6 +108,16 @@ Install the plugin. This is the best way, because it includes the hooks.
 
 Start a new chat. stint is active.
 
+> [!NOTE]
+> **Using the VS Code extension?** The `/plugin` command works only in the terminal app. Run the same steps in a terminal:
+>
+> ```bash
+> claude plugin marketplace add mrmajdi/stint
+> claude plugin install stint@stint
+> ```
+>
+> Then start a new chat in VS Code. The plugin works in the extension too. If `claude` is not found, [install the Claude Code CLI](https://code.claude.com/docs/en/setup) first.
+
 > [!TIP]
 > **Turn on usage limit warnings (optional).** Claude Code only shares your usage-limit numbers with the status line. Add this to `~/.claude/settings.json`:
 >
